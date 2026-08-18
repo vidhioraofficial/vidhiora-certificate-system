@@ -1,233 +1,359 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vidhiora | Admin</title>
 
-    <title>Vidhiora | Certificate Admin</title>
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
 
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f5f7fb;
+    color: #17233c;
+    min-height: 100vh;
+    padding: 40px 20px;
+}
 
-        body {
-            font-family: Arial, Helvetica, sans-serif;
-            background: #f5f7fb;
-            color: #17233c;
-            min-height: 100vh;
-            padding: 40px 20px;
-        }
+.container {
+    max-width: 650px;
+    margin: auto;
+}
 
-        .container {
-            max-width: 650px;
-            margin: auto;
-        }
+.card {
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 15px 45px rgba(30,55,100,.10);
+}
 
-        .card {
-            background: white;
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 15px 45px rgba(30, 55, 100, 0.10);
-        }
+.brand {
+    text-align: center;
+    font-size: 28px;
+    font-weight: 800;
+    color: #1647b8;
+}
 
-        .brand {
-            text-align: center;
-            font-size: 28px;
-            font-weight: 800;
-            color: #1647b8;
-            margin-bottom: 5px;
-        }
+.subtitle {
+    text-align: center;
+    color: #697589;
+    margin: 8px 0 30px;
+}
 
-        .subtitle {
-            text-align: center;
-            color: #697589;
-            margin-bottom: 30px;
-        }
+label {
+    display: block;
+    font-weight: 700;
+    font-size: 14px;
+    margin: 18px 0 8px;
+}
 
-        label {
-            display: block;
-            font-weight: 700;
-            font-size: 14px;
-            margin-bottom: 8px;
-            margin-top: 18px;
-        }
+input, select {
+    width: 100%;
+    padding: 14px;
+    border: 1px solid #d7deea;
+    border-radius: 10px;
+    font-size: 15px;
+}
 
-        input,
-        select {
-            width: 100%;
-            padding: 14px;
-            border: 1px solid #d7deea;
-            border-radius: 10px;
-            font-size: 15px;
-            outline: none;
-        }
+button {
+    width: 100%;
+    margin-top: 22px;
+    padding: 15px;
+    border: none;
+    border-radius: 10px;
+    background: #1647b8;
+    color: white;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+}
 
-        input:focus,
-        select:focus {
-            border-color: #1647b8;
-        }
+button:hover {
+    background: #103b9d;
+}
 
-        button {
-            width: 100%;
-            margin-top: 25px;
-            padding: 15px;
-            border: none;
-            border-radius: 10px;
-            background: #1647b8;
-            color: white;
-            font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
-        }
+.logout {
+    background: #c62828;
+    margin-top: 12px;
+}
 
-        button:hover {
-            background: #103b9d;
-        }
+.hidden {
+    display: none;
+}
 
-        button:disabled {
-            opacity: 0.7;
-            cursor: wait;
-        }
+.message {
+    margin-top: 20px;
+    padding: 14px;
+    border-radius: 10px;
+    text-align: center;
+    font-weight: 600;
+}
 
-        #message {
-            display: none;
-            margin-top: 20px;
-            padding: 15px;
-            border-radius: 10px;
-            text-align: center;
-            font-weight: 600;
-        }
+.success {
+    background: #effaf4;
+    color: #16804b;
+}
 
-        .success {
-            background: #effaf4;
-            color: #16804b;
-            border: 1px solid #c9edd9;
-        }
+.error {
+    background: #fff4f4;
+    color: #c62828;
+}
 
-        .error {
-            background: #fff4f4;
-            color: #c62828;
-            border: 1px solid #f1cccc;
-        }
-    </style>
+#loginSection,
+#adminSection {
+    display: none;
+}
+</style>
 </head>
 
 <body>
 
 <div class="container">
 
-    <div class="card">
+<div class="card">
 
-        <div class="brand">VIDHIORA</div>
+<div class="brand">VIDHIORA</div>
+<div class="subtitle">Certificate Administration</div>
 
-        <div class="subtitle">
-            Certificate Administration
-        </div>
 
-        <form id="certificateForm">
+<!-- LOGIN -->
 
-            <label for="certificateId">
-                Certificate ID
-            </label>
+<div id="loginSection">
 
-            <input
-                type="text"
-                id="certificateId"
-                placeholder="VID-2026-000003"
-                required
-            >
+<label>Email</label>
 
-            <label for="recipientName">
-                Recipient Name
-            </label>
+<input
+    type="email"
+    id="loginEmail"
+    placeholder="Admin email"
+>
 
-            <input
-                type="text"
-                id="recipientName"
-                placeholder="Enter recipient name"
-                required
-            >
+<label>Password</label>
 
-            <label for="certificateType">
-                Certificate Type
-            </label>
+<input
+    type="password"
+    id="loginPassword"
+    placeholder="Password"
+>
 
-            <input
-                type="text"
-                id="certificateType"
-                placeholder="Certificate of Participation"
-                required
-            >
+<button onclick="login()">
+    LOGIN
+</button>
 
-            <label for="eventName">
-                Event Name
-            </label>
-
-            <input
-                type="text"
-                id="eventName"
-                placeholder="Enter event name"
-                required
-            >
-
-            <label for="recipientRole">
-                Recipient Role
-            </label>
-
-            <input
-                type="text"
-                id="recipientRole"
-                placeholder="Participant / Host / Judge"
-                required
-            >
-
-            <label for="issueDate">
-                Issue Date
-            </label>
-
-            <input
-                type="date"
-                id="issueDate"
-                required
-            >
-
-            <label for="status">
-                Status
-            </label>
-
-            <select id="status" required>
-                <option value="Valid">Valid</option>
-                <option value="Revoked">Revoked</option>
-            </select>
-
-            <button type="submit" id="addButton">
-                ADD CERTIFICATE
-            </button>
-
-        </form>
-
-        <div id="message"></div>
-
-    </div>
+<div id="loginMessage"></div>
 
 </div>
+
+
+<!-- ADMIN PANEL -->
+
+<div id="adminSection">
+
+<form id="certificateForm">
+
+<label>Certificate ID</label>
+
+<input
+    type="text"
+    id="certificateId"
+    placeholder="VID-2026-000003"
+    required
+>
+
+<label>Recipient Name</label>
+
+<input
+    type="text"
+    id="recipientName"
+    placeholder="Recipient name"
+    required
+>
+
+<label>Certificate Type</label>
+
+<input
+    type="text"
+    id="certificateType"
+    placeholder="Certificate of Participation"
+    required
+>
+
+<label>Event Name</label>
+
+<input
+    type="text"
+    id="eventName"
+    placeholder="Event name"
+    required
+>
+
+<label>Recipient Role</label>
+
+<input
+    type="text"
+    id="recipientRole"
+    placeholder="Participant / Host / Judge"
+    required
+>
+
+<label>Issue Date</label>
+
+<input
+    type="date"
+    id="issueDate"
+    required
+>
+
+<label>Status</label>
+
+<select id="status">
+    <option value="Valid">Valid</option>
+    <option value="Revoked">Revoked</option>
+</select>
+
+<button type="submit" id="addButton">
+    ADD CERTIFICATE
+</button>
+
+</form>
+
+<div id="message"></div>
+
+<button class="logout" onclick="logout()">
+    LOGOUT
+</button>
+
+</div>
+
+</div>
+
+</div>
+
 
 <script>
 
 const SUPABASE_URL =
-    "https://ixytbjxucljmfogcydvf.supabase.co";
+"https://ixytbjxucljmfogcydvf.supabase.co";
 
 const SUPABASE_PUBLISHABLE_KEY =
-    "sb_publishable_K9Ei75rMUQZ_bwk7NrRu0A_mhhfUJ9N";
+"sb_publishable_K9Ei75rMUQZ_bwk7NrRu0A_mhhfUJ9N";
 
+
+const headers = {
+    "Content-Type": "application/json",
+    "apikey": SUPABASE_PUBLISHABLE_KEY
+};
+
+
+// LOGIN
+
+async function login() {
+
+    const email =
+        document.getElementById("loginEmail").value.trim();
+
+    const password =
+        document.getElementById("loginPassword").value;
+
+    const message =
+        document.getElementById("loginMessage");
+
+    try {
+
+        const response = await fetch(
+            `${SUPABASE_URL}/auth/v1/token?grant_type=password`,
+            {
+                method: "POST",
+
+                headers: headers,
+
+                body: JSON.stringify({
+                    email: email,
+                    password: password
+                })
+            }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(
+                data.error_description ||
+                data.msg ||
+                "Login failed"
+            );
+        }
+
+        localStorage.setItem(
+            "supabase_access_token",
+            data.access_token
+        );
+
+        showAdmin();
+
+    } catch (error) {
+
+        message.textContent =
+            "✕ " + error.message;
+
+        message.className =
+            "message error";
+
+    }
+}
+
+
+// SHOW ADMIN
+
+function showAdmin() {
+
+    document.getElementById("loginSection")
+        .style.display = "none";
+
+    document.getElementById("adminSection")
+        .style.display = "block";
+}
+
+
+// CHECK LOGIN
+
+function checkLogin() {
+
+    const token =
+        localStorage.getItem(
+            "supabase_access_token"
+        );
+
+    if (token) {
+        showAdmin();
+    } else {
+        document.getElementById("loginSection")
+            .style.display = "block";
+    }
+}
+
+
+// ADD CERTIFICATE
 
 document.getElementById("certificateForm")
 .addEventListener("submit", async function(event) {
 
     event.preventDefault();
+
+    const token =
+        localStorage.getItem(
+            "supabase_access_token"
+        );
+
+    if (!token) {
+        alert("Please login first.");
+        return;
+    }
 
     const button =
         document.getElementById("addButton");
@@ -269,8 +395,6 @@ document.getElementById("certificateForm")
     button.disabled = true;
     button.textContent = "ADDING...";
 
-    message.style.display = "none";
-
     try {
 
         const response = await fetch(
@@ -279,11 +403,11 @@ document.getElementById("certificateForm")
                 method: "POST",
 
                 headers: {
-                    "Content-Type": "application/json",
-                    "apikey": SUPABASE_PUBLISHABLE_KEY,
+                    ...headers,
                     "Authorization":
-                        `Bearer ${SUPABASE_PUBLISHABLE_KEY}`,
-                    "Prefer": "return=minimal"
+                        `Bearer ${token}`,
+                    "Prefer":
+                        "return=minimal"
                 },
 
                 body: JSON.stringify(certificate)
@@ -301,28 +425,45 @@ document.getElementById("certificateForm")
         message.textContent =
             "✓ Certificate added successfully!";
 
-        message.className = "success";
-        message.style.display = "block";
+        message.className =
+            "message success";
 
-        document.getElementById("certificateForm").reset();
+        document.getElementById("certificateForm")
+            .reset();
 
     } catch (error) {
 
         console.error(error);
 
         message.textContent =
-            "✕ Unable to add certificate. Please check the details.";
+            "✕ Unable to add certificate.";
 
-        message.className = "error";
-        message.style.display = "block";
+        message.className =
+            "message error";
 
     } finally {
 
         button.disabled = false;
-        button.textContent = "ADD CERTIFICATE";
+        button.textContent =
+            "ADD CERTIFICATE";
     }
 
 });
+
+
+// LOGOUT
+
+function logout() {
+
+    localStorage.removeItem(
+        "supabase_access_token"
+    );
+
+    location.reload();
+}
+
+
+checkLogin();
 
 </script>
 
