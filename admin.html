@@ -3,9 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Vidhiora | Admin</title>
+
+<title>Vidhiora | Certificate Admin</title>
 
 <style>
+
 * {
     box-sizing: border-box;
     margin: 0;
@@ -52,17 +54,36 @@ label {
     margin: 18px 0 8px;
 }
 
-input, select {
+input,
+select {
     width: 100%;
     padding: 14px;
     border: 1px solid #d7deea;
     border-radius: 10px;
     font-size: 15px;
+    outline: none;
+}
+
+input:focus,
+select:focus {
+    border-color: #1647b8;
+}
+
+.certificate-id {
+    margin-top: 10px;
+    padding: 16px;
+    background: #edf3ff;
+    border: 1px solid #d5e2ff;
+    border-radius: 10px;
+    color: #1647b8;
+    font-weight: 800;
+    text-align: center;
+    font-size: 17px;
 }
 
 button {
     width: 100%;
-    margin-top: 22px;
+    margin-top: 25px;
     padding: 15px;
     border: none;
     border-radius: 10px;
@@ -77,13 +98,14 @@ button:hover {
     background: #103b9d;
 }
 
+button:disabled {
+    opacity: .7;
+    cursor: wait;
+}
+
 .logout {
     background: #c62828;
     margin-top: 12px;
-}
-
-.hidden {
-    display: none;
 }
 
 .message {
@@ -108,6 +130,7 @@ button:hover {
 #adminSection {
     display: none;
 }
+
 </style>
 </head>
 
@@ -117,15 +140,22 @@ button:hover {
 
 <div class="card">
 
-<div class="brand">VIDHIORA</div>
-<div class="subtitle">Certificate Administration</div>
+<div class="brand">
+VIDHIORA
+</div>
+
+<div class="subtitle">
+Certificate Administration
+</div>
 
 
 <!-- LOGIN -->
 
 <div id="loginSection">
 
-<label>Email</label>
+<label>
+Email
+</label>
 
 <input
     type="email"
@@ -133,7 +163,9 @@ button:hover {
     placeholder="Admin email"
 >
 
-<label>Password</label>
+<label>
+Password
+</label>
 
 <input
     type="password"
@@ -142,7 +174,7 @@ button:hover {
 >
 
 <button onclick="login()">
-    LOGIN
+LOGIN
 </button>
 
 <div id="loginMessage"></div>
@@ -150,22 +182,85 @@ button:hover {
 </div>
 
 
-<!-- ADMIN PANEL -->
+<!-- ADMIN -->
 
 <div id="adminSection">
 
 <form id="certificateForm">
 
-<label>Certificate ID</label>
 
-<input
-    type="text"
-    id="certificateId"
-    placeholder="VID-2026-000003"
-    required
+<label>
+Certificate Type
+</label>
+
+<select id="certificateType" required>
+
+<option value="">
+Select Certificate Type
+</option>
+
+<option value="CERTIFICATE OF APPRECIATION">
+Certificate of Appreciation
+</option>
+
+<option value="CERTIFICATE OF PARTICIPATION">
+Certificate of Participation
+</option>
+
+<option value="CERTIFICATE OF EXCELLENCE">
+Certificate of Excellence
+</option>
+
+<option value="INTERNSHIP CERTIFICATE">
+Internship Certificate
+</option>
+
+<option value="VOLUNTEER CERTIFICATE">
+Volunteer Certificate
+</option>
+
+<option value="JUDGE/COORDINATOR">
+Judge/Coordinator
+</option>
+
+<option value="HOST CERTIFICATE">
+Host Certificate
+</option>
+
+<option value="BEST PERFORMER">
+Best Performer
+</option>
+
+<option value="BEST SPEAKER">
+Best Speaker
+</option>
+
+<option value="ACTIVE MEMBER">
+Active Member
+</option>
+
+<option value="MEMENTO/TOKEN OF APPRECIATION">
+Memento/Token of Appreciation
+</option>
+
+</select>
+
+
+<label>
+Generated Certificate ID
+</label>
+
+<div
+    id="generatedId"
+    class="certificate-id"
 >
+Select certificate type
+</div>
 
-<label>Recipient Name</label>
+
+<label>
+Recipient Name
+</label>
 
 <input
     type="text"
@@ -174,16 +269,10 @@ button:hover {
     required
 >
 
-<label>Certificate Type</label>
 
-<input
-    type="text"
-    id="certificateType"
-    placeholder="Certificate of Participation"
-    required
->
-
-<label>Event Name</label>
+<label>
+Event Name
+</label>
 
 <input
     type="text"
@@ -192,7 +281,10 @@ button:hover {
     required
 >
 
-<label>Recipient Role</label>
+
+<label>
+Recipient Role
+</label>
 
 <input
     type="text"
@@ -201,7 +293,10 @@ button:hover {
     required
 >
 
-<label>Issue Date</label>
+
+<label>
+Issue Date
+</label>
 
 <input
     type="date"
@@ -209,23 +304,38 @@ button:hover {
     required
 >
 
-<label>Status</label>
+
+<label>
+Status
+</label>
 
 <select id="status">
-    <option value="VALID">VALID</option>
-    <option value="Revoked">Revoked</option>
+
+<option value="VALID">
+VALID
+</option>
+
 </select>
 
-<button type="submit" id="addButton">
-    ADD CERTIFICATE
+
+<button
+    type="submit"
+    id="addButton"
+>
+ADD CERTIFICATE
 </button>
+
 
 </form>
 
 <div id="message"></div>
 
-<button class="logout" onclick="logout()">
-    LOGOUT
+
+<button
+    class="logout"
+    onclick="logout()"
+>
+LOGOUT
 </button>
 
 </div>
@@ -245,48 +355,63 @@ const SUPABASE_PUBLISHABLE_KEY =
 
 
 const headers = {
-    "Content-Type": "application/json",
-    "apikey": SUPABASE_PUBLISHABLE_KEY
+
+    "Content-Type":
+        "application/json",
+
+    "apikey":
+        SUPABASE_PUBLISHABLE_KEY
+
 };
 
 
-// LOGIN
+/* LOGIN */
 
 async function login() {
 
     const email =
-        document.getElementById("loginEmail").value.trim();
+        document.getElementById(
+            "loginEmail"
+        ).value.trim();
 
     const password =
-        document.getElementById("loginPassword").value;
+        document.getElementById(
+            "loginPassword"
+        ).value;
 
     const message =
-        document.getElementById("loginMessage");
+        document.getElementById(
+            "loginMessage"
+        );
 
     try {
 
-        const response = await fetch(
-            `${SUPABASE_URL}/auth/v1/token?grant_type=password`,
-            {
-                method: "POST",
+        const response =
+            await fetch(
+                `${SUPABASE_URL}/auth/v1/token?grant_type=password`,
+                {
+                    method: "POST",
 
-                headers: headers,
+                    headers: headers,
 
-                body: JSON.stringify({
-                    email: email,
-                    password: password
-                })
-            }
-        );
+                    body: JSON.stringify({
+                        email: email,
+                        password: password
+                    })
+                }
+            );
 
-        const data = await response.json();
+        const data =
+            await response.json();
 
         if (!response.ok) {
+
             throw new Error(
                 data.error_description ||
                 data.msg ||
                 "Login failed"
             );
+
         }
 
         localStorage.setItem(
@@ -296,7 +421,9 @@ async function login() {
 
         showAdmin();
 
-    } catch (error) {
+    }
+
+    catch (error) {
 
         message.textContent =
             "✕ " + error.message;
@@ -305,22 +432,26 @@ async function login() {
             "message error";
 
     }
+
 }
 
 
-// SHOW ADMIN
+/* SHOW ADMIN */
 
 function showAdmin() {
 
-    document.getElementById("loginSection")
-        .style.display = "none";
+    document.getElementById(
+        "loginSection"
+    ).style.display = "none";
 
-    document.getElementById("adminSection")
-        .style.display = "block";
+    document.getElementById(
+        "adminSection"
+    ).style.display = "block";
+
 }
 
 
-// CHECK LOGIN
+/* CHECK LOGIN */
 
 function checkLogin() {
 
@@ -330,20 +461,50 @@ function checkLogin() {
         );
 
     if (token) {
+
         showAdmin();
+
     } else {
-        document.getElementById("loginSection")
-            .style.display = "block";
+
+        document.getElementById(
+            "loginSection"
+        ).style.display = "block";
+
     }
+
 }
 
 
-// ADD CERTIFICATE
+/* GENERATE ID */
 
-document.getElementById("certificateForm")
-.addEventListener("submit", async function(event) {
+async function generateCertificateId() {
 
-    event.preventDefault();
+    const type =
+        document.getElementById(
+            "certificateType"
+        ).value;
+
+    const date =
+        document.getElementById(
+            "issueDate"
+        ).value;
+
+    const display =
+        document.getElementById(
+            "generatedId"
+        );
+
+    if (!type || !date) {
+
+        display.textContent =
+            "Select certificate type and issue date";
+
+        return;
+
+    }
+
+    const year =
+        new Date(date).getFullYear();
 
     const token =
         localStorage.getItem(
@@ -351,107 +512,270 @@ document.getElementById("certificateForm")
         );
 
     if (!token) {
-        alert("Please login first.");
+
+        display.textContent =
+            "Please login first";
+
         return;
+
     }
 
-    const button =
-        document.getElementById("addButton");
-
-    const message =
-        document.getElementById("message");
-
-    const certificate = {
-
-        certificate_id:
-            document.getElementById("certificateId")
-            .value.trim().toUpperCase(),
-
-        recipient_name:
-            document.getElementById("recipientName")
-            .value.trim(),
-
-        certificate_type:
-            document.getElementById("certificateType")
-            .value.trim(),
-
-        event_name:
-            document.getElementById("eventName")
-            .value.trim(),
-
-        recipient_role:
-            document.getElementById("recipientRole")
-            .value.trim(),
-
-        issue_date:
-            document.getElementById("issueDate")
-            .value,
-
-        status:
-            document.getElementById("status")
-            .value
-    };
-
-    button.disabled = true;
-    button.textContent = "ADDING...";
+    display.textContent =
+        "Generating ID...";
 
     try {
 
-        const response = await fetch(
-            `${SUPABASE_URL}/rest/v1/certificates`,
-            {
-                method: "POST",
+        const response =
+            await fetch(
+                `${SUPABASE_URL}/rest/v1/rpc/generate_certificate_id`,
+                {
+                    method: "POST",
 
-                headers: {
-                    ...headers,
-                    "Authorization":
-                        `Bearer ${token}`,
-                    "Prefer":
-                        "return=minimal"
-                },
+                    headers: {
+                        ...headers,
 
-                body: JSON.stringify(certificate)
-            }
-        );
+                        "Authorization":
+                            `Bearer ${token}`
+                    },
+
+                    body: JSON.stringify({
+
+                        p_certificate_type:
+                            type,
+
+                        p_year:
+                            year
+
+                    })
+                }
+            );
+
+        const data =
+            await response.json();
 
         if (!response.ok) {
 
-            const errorText =
-                await response.text();
+            throw new Error(
+                JSON.stringify(data)
+            );
 
-            throw new Error(errorText);
         }
 
-        message.textContent =
-            "✓ Certificate added successfully!";
+        display.textContent =
+            data;
 
-        message.className =
-            "message success";
+        display.dataset.id =
+            data;
 
-        document.getElementById("certificateForm")
-            .reset();
+    }
 
-    } catch (error) {
+    catch (error) {
 
         console.error(error);
 
-        message.textContent =
-            "✕ Unable to add certificate.";
+        display.textContent =
+            "Unable to generate ID";
 
-        message.className =
-            "message error";
-
-    } finally {
-
-        button.disabled = false;
-        button.textContent =
-            "ADD CERTIFICATE";
     }
 
-});
+}
 
 
-// LOGOUT
+/* TYPE CHANGE */
+
+document.getElementById(
+    "certificateType"
+).addEventListener(
+    "change",
+    generateCertificateId
+);
+
+
+/* DATE CHANGE */
+
+document.getElementById(
+    "issueDate"
+).addEventListener(
+    "change",
+    generateCertificateId
+);
+
+
+/* ADD CERTIFICATE */
+
+document.getElementById(
+    "certificateForm"
+).addEventListener(
+    "submit",
+    async function(event) {
+
+        event.preventDefault();
+
+        const token =
+            localStorage.getItem(
+                "supabase_access_token"
+            );
+
+        const certificateId =
+            document.getElementById(
+                "generatedId"
+            ).dataset.id;
+
+        if (!certificateId) {
+
+            alert(
+                "Please select certificate type and issue date first."
+            );
+
+            return;
+
+        }
+
+        const button =
+            document.getElementById(
+                "addButton"
+            );
+
+        const message =
+            document.getElementById(
+                "message"
+            );
+
+        const certificate = {
+
+            certificate_id:
+                certificateId,
+
+            recipient_name:
+                document.getElementById(
+                    "recipientName"
+                ).value.trim(),
+
+            certificate_type:
+                document.getElementById(
+                    "certificateType"
+                ).value,
+
+            event_name:
+                document.getElementById(
+                    "eventName"
+                ).value.trim(),
+
+            recipient_role:
+                document.getElementById(
+                    "recipientRole"
+                ).value.trim(),
+
+            issue_date:
+                document.getElementById(
+                    "issueDate"
+                ).value,
+
+            status:
+                document.getElementById(
+                    "status"
+                ).value
+
+        };
+
+
+        button.disabled = true;
+
+        button.textContent =
+            "ADDING...";
+
+
+        try {
+
+            const response =
+                await fetch(
+                    `${SUPABASE_URL}/rest/v1/certificates`,
+                    {
+                        method: "POST",
+
+                        headers: {
+
+                            ...headers,
+
+                            "Authorization":
+                                `Bearer ${token}`,
+
+                            "Prefer":
+                                "return=minimal"
+
+                        },
+
+                        body:
+                            JSON.stringify(
+                                certificate
+                            )
+
+                    }
+                );
+
+
+            if (!response.ok) {
+
+                const errorText =
+                    await response.text();
+
+                throw new Error(
+                    errorText
+                );
+
+            }
+
+
+            message.textContent =
+                "✓ Certificate added successfully! ID: " +
+                certificateId;
+
+            message.className =
+                "message success";
+
+
+            document.getElementById(
+                "certificateForm"
+            ).reset();
+
+
+            document.getElementById(
+                "generatedId"
+            ).textContent =
+                "Select certificate type";
+
+            delete document.getElementById(
+                "generatedId"
+            ).dataset.id;
+
+        }
+
+        catch (error) {
+
+            console.error(error);
+
+            message.textContent =
+                "✕ Unable to add certificate.";
+
+            message.className =
+                "message error";
+
+        }
+
+        finally {
+
+            button.disabled = false;
+
+            button.textContent =
+                "ADD CERTIFICATE";
+
+        }
+
+    }
+);
+
+
+/* LOGOUT */
 
 function logout() {
 
@@ -460,6 +784,7 @@ function logout() {
     );
 
     location.reload();
+
 }
 
 
