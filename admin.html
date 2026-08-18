@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Vidhiora | Certificate Admin</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f5f7fb;
+            color: #17233c;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 650px;
+            margin: auto;
+        }
+
+        .card {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 45px rgba(30, 55, 100, 0.10);
+        }
+
+        .brand {
+            text-align: center;
+            font-size: 28px;
+            font-weight: 800;
+            color: #1647b8;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #697589;
+            margin-bottom: 30px;
+        }
+
+        label {
+            display: block;
+            font-weight: 700;
+            font-size: 14px;
+            margin-bottom: 8px;
+            margin-top: 18px;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #d7deea;
+            border-radius: 10px;
+            font-size: 15px;
+            outline: none;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: #1647b8;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 25px;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            background: #1647b8;
+            color: white;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #103b9d;
+        }
+
+        button:disabled {
+            opacity: 0.7;
+            cursor: wait;
+        }
+
+        #message {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .success {
+            background: #effaf4;
+            color: #16804b;
+            border: 1px solid #c9edd9;
+        }
+
+        .error {
+            background: #fff4f4;
+            color: #c62828;
+            border: 1px solid #f1cccc;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="card">
+
+        <div class="brand">VIDHIORA</div>
+
+        <div class="subtitle">
+            Certificate Administration
+        </div>
+
+        <form id="certificateForm">
+
+            <label for="certificateId">
+                Certificate ID
+            </label>
+
+            <input
+                type="text"
+                id="certificateId"
+                placeholder="VID-2026-000003"
+                required
+            >
+
+            <label for="recipientName">
+                Recipient Name
+            </label>
+
+            <input
+                type="text"
+                id="recipientName"
+                placeholder="Enter recipient name"
+                required
+            >
+
+            <label for="certificateType">
+                Certificate Type
+            </label>
+
+            <input
+                type="text"
+                id="certificateType"
+                placeholder="Certificate of Participation"
+                required
+            >
+
+            <label for="eventName">
+                Event Name
+            </label>
+
+            <input
+                type="text"
+                id="eventName"
+                placeholder="Enter event name"
+                required
+            >
+
+            <label for="recipientRole">
+                Recipient Role
+            </label>
+
+            <input
+                type="text"
+                id="recipientRole"
+                placeholder="Participant / Host / Judge"
+                required
+            >
+
+            <label for="issueDate">
+                Issue Date
+            </label>
+
+            <input
+                type="date"
+                id="issueDate"
+                required
+            >
+
+            <label for="status">
+                Status
+            </label>
+
+            <select id="status" required>
+                <option value="Valid">Valid</option>
+                <option value="Revoked">Revoked</option>
+            </select>
+
+            <button type="submit" id="addButton">
+                ADD CERTIFICATE
+            </button>
+
+        </form>
+
+        <div id="message"></div>
+
+    </div>
+
+</div>
+
+<script>
+
+const SUPABASE_URL =
+    "https://ixytbjxucljmfogcydvf.supabase.co";
+
+const SUPABASE_PUBLISHABLE_KEY =
+    "sb_publishable_K9Ei75rMUQZ_bwk7NrRu0A_mhhfUJ9N";
+
+
+document.getElementById("certificateForm")
+.addEventListener("submit", async function(event) {
+
+    event.preventDefault();
+
+    const button =
+        document.getElementById("addButton");
+
+    const message =
+        document.getElementById("message");
+
+    const certificate = {
+
+        certificate_id:
+            document.getElementById("certificateId")
+            .value.trim().toUpperCase(),
+
+        recipient_name:
+            document.getElementById("recipientName")
+            .value.trim(),
+
+        certificate_type:
+            document.getElementById("certificateType")
+            .value.trim(),
+
+        event_name:
+            document.getElementById("eventName")
+            .value.trim(),
+
+        recipient_role:
+            document.getElementById("recipientRole")
+            .value.trim(),
+
+        issue_date:
+            document.getElementById("issueDate")
+            .value,
+
+        status:
+            document.getElementById("status")
+            .value
+    };
+
+    button.disabled = true;
+    button.textContent = "ADDING...";
+
+    message.style.display = "none";
+
+    try {
+
+        const response = await fetch(
+            `${SUPABASE_URL}/rest/v1/certificates`,
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json",
+                    "apikey": SUPABASE_PUBLISHABLE_KEY,
+                    "Authorization":
+                        `Bearer ${SUPABASE_PUBLISHABLE_KEY}`,
+                    "Prefer": "return=minimal"
+                },
+
+                body: JSON.stringify(certificate)
+            }
+        );
+
+        if (!response.ok) {
+
+            const errorText =
+                await response.text();
+
+            throw new Error(errorText);
+        }
+
+        message.textContent =
+            "✓ Certificate added successfully!";
+
+        message.className = "success";
+        message.style.display = "block";
+
+        document.getElementById("certificateForm").reset();
+
+    } catch (error) {
+
+        console.error(error);
+
+        message.textContent =
+            "✕ Unable to add certificate. Please check the details.";
+
+        message.className = "error";
+        message.style.display = "block";
+
+    } finally {
+
+        button.disabled = false;
+        button.textContent = "ADD CERTIFICATE";
+    }
+
+});
+
+</script>
+
+</body>
+</html>
